@@ -5,7 +5,7 @@
 <generatorConfiguration>
     <!-- 数据库驱动:选择你的本地硬盘上面的数据库驱动包-->
     <classPathEntry
-            location="D:\RuanjianjishuWorkspace\repo\mysql\mysql-connector-java\5.1.45\mysql-connector-java-5.1.45.jar"/>
+            location="D:\repo\mysql\mysql-connector-java\5.1.45\mysql-connector-java-5.1.45.jar"/>
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <commentGenerator>
             <property name="suppressDate" value="true"/>
@@ -35,37 +35,26 @@
         </javaClientGenerator>
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
         <table tableName="address" domainObjectName="Address">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="business" domainObjectName="Business">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="cart" domainObjectName="Cart">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="goods" domainObjectName="Goods">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="goods_list" domainObjectName="GoodsList">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="goods_type" domainObjectName="GoodsType">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="orders" domainObjectName="Orders">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="person" domainObjectName="Person">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="shop_user" domainObjectName="User">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="stock" domainObjectName="Stock">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
         <table tableName="vipcard" domainObjectName="VipCard">
-            <property name="useActualColumnNames" value="true"></property>
         </table>
 
     </context>
