@@ -13,6 +13,30 @@ public class Business {
 
     private String phone;
 
+    public Business() {
+    }
+
+    public Business(Integer businessId, String username, String password, String shopName, String photoUrl, String phone) {
+        this.businessId = businessId;
+        this.username = username;
+        this.password = password;
+        this.shopName = shopName;
+        this.photoUrl = photoUrl;
+        this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return "Business{" +
+                "businessId=" + businessId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", shopName='" + shopName + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
+
     public Integer getBusinessId() {
         return businessId;
     }

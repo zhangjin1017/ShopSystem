@@ -11,6 +11,17 @@ public class Cart {
 
     private Integer type;
 
+    public Cart() {
+    }
+
+    public Cart(Integer cartId, Integer userId, Integer goodsId, Integer num, Integer type) {
+        this.cartId = cartId;
+        this.userId = userId;
+        this.goodsId = goodsId;
+        this.num = num;
+        this.type = type;
+    }
+
     public Integer getCartId() {
         return cartId;
     }

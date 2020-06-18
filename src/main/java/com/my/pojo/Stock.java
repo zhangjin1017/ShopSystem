@@ -13,6 +13,17 @@ public class Stock {
 
     private Integer num;
 
+    public Stock() {
+    }
+
+    public Stock(Integer stockId, Integer goodsId, Integer type, Date date, Integer num) {
+        this.stockId = stockId;
+        this.goodsId = goodsId;
+        this.type = type;
+        this.date = date;
+        this.num = num;
+    }
+
     public Integer getStockId() {
         return stockId;
     }

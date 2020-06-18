@@ -5,9 +5,10 @@ import com.my.pojo.VipCard;
 import com.my.pojo.VipCardExample;
 import com.my.service.VipCardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class VipCardServiceImp implements VipCardService {
     private VipCardMapper vipCardMapper;
 

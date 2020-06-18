@@ -13,6 +13,17 @@ public class Person {
 
     private Date birth;
 
+    public Person() {
+    }
+
+    public Person(Integer personId, Integer userId, String name, String sex, Date birth) {
+        this.personId = personId;
+        this.userId = userId;
+        this.name = name;
+        this.sex = sex;
+        this.birth = birth;
+    }
+
     public Integer getPersonId() {
         return personId;
     }

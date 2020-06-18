@@ -5,6 +5,14 @@ public class GoodsType {
 
     private String type;
 
+    public GoodsType() {
+    }
+
+    public GoodsType(Integer typeId, String type) {
+        this.typeId = typeId;
+        this.type = type;
+    }
+
     public Integer getTypeId() {
         return typeId;
     }

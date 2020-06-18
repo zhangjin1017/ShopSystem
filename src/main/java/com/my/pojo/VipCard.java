@@ -7,6 +7,15 @@ public class VipCard {
 
     private Double money;
 
+    public VipCard() {
+    }
+
+    public VipCard(String cardId, Integer userId, Double money) {
+        this.cardId = cardId;
+        this.userId = userId;
+        this.money = money;
+    }
+
     public String getCardId() {
         return cardId;
     }

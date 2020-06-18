@@ -9,6 +9,16 @@ public class GoodsList {
 
     private Integer goodsNum;
 
+    public GoodsList() {
+    }
+
+    public GoodsList(Integer listId, Integer orderId, Integer goodsId, Integer goodsNum) {
+        this.listId = listId;
+        this.orderId = orderId;
+        this.goodsId = goodsId;
+        this.goodsNum = goodsNum;
+    }
+
     public Integer getListId() {
         return listId;
     }

@@ -17,6 +17,20 @@ public class Goods {
 
     private String info;
 
+    public Goods() {
+    }
+
+    public Goods(Integer goodsId, Integer businessId, String name, Double price, Integer typeId, String imgUrl, Integer stock, String info) {
+        this.goodsId = goodsId;
+        this.businessId = businessId;
+        this.name = name;
+        this.price = price;
+        this.typeId = typeId;
+        this.imgUrl = imgUrl;
+        this.stock = stock;
+        this.info = info;
+    }
+
     public Integer getGoodsId() {
         return goodsId;
     }

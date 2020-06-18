@@ -19,6 +19,20 @@ public class Orders {
 
     private String logistics;
 
+    public Orders() {
+    }
+
+    public Orders(String orderId, Integer businessId, Integer userId, Integer goodsId, Date date, Integer type, Integer addressId, String logistics) {
+        this.orderId = orderId;
+        this.businessId = businessId;
+        this.userId = userId;
+        this.goodsId = goodsId;
+        this.date = date;
+        this.type = type;
+        this.addressId = addressId;
+        this.logistics = logistics;
+    }
+
     public String getOrderId() {
         return orderId;
     }

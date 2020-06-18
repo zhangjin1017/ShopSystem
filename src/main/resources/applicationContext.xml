@@ -11,11 +11,11 @@
     <context:property-placeholder location="classpath:db.properties"/>
     <context:property-placeholder location="classpath:log4j.properties"/>
     <!--配置数据源-->
-    <bean class="org.apache.commons.dbcp2.BasicDataSource" id="dataSource">
-        <property name="driverClassName" value="${jdbc.driver}"/>
+    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
         <property name="url" value="${jdbc.url}"/>
         <property name="password" value="${jdbc.password}"/>
         <property name="username" value="${jdbc.username}"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
     </bean>
     <!--开启事务注解-->
     <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
@@ -32,5 +32,6 @@
         <property name="basePackage" value="com.my.dao"/>
     </bean>
     <!--扫描service-->
-    <context:component-scan base-package="com.my.*"/>
+    <context:component-scan base-package="com.my.service"/>
+
 </beans>

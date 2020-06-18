@@ -5,9 +5,10 @@ import com.my.pojo.Stock;
 import com.my.pojo.StockExample;
 import com.my.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class StockServiceImp implements StockService {
     private StockMapper stockMapper;
 

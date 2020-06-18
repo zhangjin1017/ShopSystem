@@ -1,6 +1,7 @@
 package com.my.pojo;
 
 public class User {
+
     private Integer userId;
 
     private String username;
@@ -10,6 +11,17 @@ public class User {
     private String phone;
 
     private String faceUrl;
+
+    public User() {
+    }
+
+    public User(Integer userId, String username, String password, String phone, String faceUrl) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
+        this.faceUrl = faceUrl;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -49,5 +61,16 @@ public class User {
 
     public void setFaceUrl(String faceUrl) {
         this.faceUrl = faceUrl == null ? null : faceUrl.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", phone='" + phone + '\'' +
+                ", faceUrl='" + faceUrl + '\'' +
+                '}';
     }
 }

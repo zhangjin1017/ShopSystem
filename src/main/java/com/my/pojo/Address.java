@@ -13,6 +13,18 @@ public class Address {
 
     private String address;
 
+    public Address() {
+    }
+
+    public Address(Integer addressId, Integer userId, String province, String city, String district, String address) {
+        this.addressId = addressId;
+        this.userId = userId;
+        this.province = province;
+        this.city = city;
+        this.district = district;
+        this.address = address;
+    }
+
     public Integer getAddressId() {
         return addressId;
     }
@@ -59,5 +71,17 @@ public class Address {
 
     public void setAddress(String address) {
         this.address = address == null ? null : address.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "addressId=" + addressId +
+                ", userId=" + userId +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }
