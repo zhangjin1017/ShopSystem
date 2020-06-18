@@ -140,24 +140,27 @@ public class UserController {
         String score = userList.getString("score");
         String username = userList.getString("user_info");
         System.out.println(username);
-        UserExample userExample = new UserExample();
-        UserExample.Criteria criteria = userExample.createCriteria();
-        criteria.andUsernameEqualTo(username);
-        List<User> list = userService.selectByExample(userExample);
-        System.out.println(list);
-        if (list.size() == 1) {
-            User u = list.get(0);
-            User user = new User();
-            user.setUsername(u.getUsername());
-            user.setPhone(u.getPhone());
-            user.setPassword(u.getPassword());
-            user.setUserId(u.getUserId());
-            return new Gson().toJson(user);
-        } else {
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "该人脸未注册或人脸信息有误");
-            return new Gson().toJson(map);
+        if (Double.parseDouble(score) > 60) {
+            UserExample userExample = new UserExample();
+            UserExample.Criteria criteria = userExample.createCriteria();
+            criteria.andUsernameEqualTo(username);
+            List<User> list = userService.selectByExample(userExample);
+            System.out.println(list);
+            if (list.size() == 1) {
+                User u = list.get(0);
+                User user = new User();
+                user.setUsername(u.getUsername());
+                user.setPhone(u.getPhone());
+                user.setPassword(u.getPassword());
+                user.setUserId(u.getUserId());
+                return new Gson().toJson(user);
+            }
         }
+
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "该人脸未注册或人脸信息有误");
+        return new Gson().toJson(map);
+
     }
 
 
