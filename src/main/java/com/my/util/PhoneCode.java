@@ -15,6 +15,10 @@ public class PhoneCode {
 
     private static String code;
 
+    public static String getCode() {
+        return code;
+    }
+
     public static void main(String[] args) {
         String phone = "17751591450"; //此处可输入你的手机号码进行测试
         System.out.println(getPhonemsg(phone));
