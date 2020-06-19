@@ -40,7 +40,8 @@ public class UserController {
         map.put("message", message);
         if ("true".equals(message)) {
             System.out.println(PhoneCode.vcode());
-            req.setAttribute("code", PhoneCode.vcode());
+            req.setAttribute(phone, PhoneCode.vcode());
+            System.out.println(req.getParameter(phone));
         }
         return new Gson().toJson(map);
     }
@@ -65,7 +66,7 @@ public class UserController {
         List<User> list2 = userService.selectByExample(userExample);
 
         //如果用户名与手机号都没有重复的，执行操作
-        String origin_code = req.getParameter("code");
+        String origin_code = req.getParameter(phone);
         System.out.println(origin_code);
 
         if (list1.size() == 0 && list2.size() == 0 && origin_code.equals(code)) {
@@ -75,10 +76,10 @@ public class UserController {
 
             JSONObject jsonObject = JSONObject.parseObject(FaceUtil.add(imgData, username));
             String message = jsonObject.getString("error_msg");
-            System.out.println(message);
+//            System.out.println(message);
             if ("SUCCESS".equals(message)) {
                 String faceToken = (String) ((JSONObject) jsonObject.get("result")).get("face_token");
-                System.out.println(faceToken);
+//                System.out.println(faceToken);
                 User user = new User(null, username, password, phone, faceToken);
                 int line = userService.insertSelective(user);
                 if (line > 0) {
@@ -111,6 +112,7 @@ public class UserController {
         criteria.andUsernameEqualTo(username);
         criteria.andPasswordEqualTo(password);
         List<User> list = userService.selectByExample(userExample);
+        Map<String, String> map = new HashMap<>();
         if (list.size() == 1) {
             User user = new User();
             User u = list.get(0);
@@ -118,9 +120,12 @@ public class UserController {
             user.setPhone(u.getPhone());
             user.setPassword(u.getPassword());
             user.setUserId(u.getUserId());
-            return new Gson().toJson(user);
+
+            map.put("message", "success");
+            map.put("user", new Gson().toJson(user));
+            return new Gson().toJson(map);
         } else {
-            Map<String, String> map = new HashMap<>();
+
             map.put("message", "用户名或密码错误");
 
             return new Gson().toJson(map);
@@ -134,18 +139,19 @@ public class UserController {
             image = image.substring("data:image/png;base64,".length());
         }
         String json = FaceUtil.faceSearch(image);
-        System.out.println(json);
+//        System.out.println(json);
         JSONObject result = (JSONObject) JSONObject.parseObject(json).get("result");
         JSONObject userList = ((JSONObject) ((JSONArray) result.get("user_list")).get(0));
         String score = userList.getString("score");
         String username = userList.getString("user_info");
-        System.out.println(username);
+//        System.out.println(username);
+        Map<String, String> map = new HashMap<>();
         if (Double.parseDouble(score) > 60) {
             UserExample userExample = new UserExample();
             UserExample.Criteria criteria = userExample.createCriteria();
             criteria.andUsernameEqualTo(username);
             List<User> list = userService.selectByExample(userExample);
-            System.out.println(list);
+//            System.out.println(list);
             if (list.size() == 1) {
                 User u = list.get(0);
                 User user = new User();
@@ -153,11 +159,11 @@ public class UserController {
                 user.setPhone(u.getPhone());
                 user.setPassword(u.getPassword());
                 user.setUserId(u.getUserId());
-                return new Gson().toJson(user);
+                map.put("message", "success");
+                map.put("user", new Gson().toJson(user));
+                return new Gson().toJson(map);
             }
         }
-
-        Map<String, String> map = new HashMap<>();
         map.put("message", "该人脸未注册或人脸信息有误");
         return new Gson().toJson(map);
 
@@ -175,12 +181,13 @@ public class UserController {
         userExample.createCriteria().andPhoneEqualTo(phone);//对比手机号是否重复
         List<User> list1 = userService.selectByExample(userExample);
 
-        String origin_code = req.getParameter("code");
+        String origin_code = req.getParameter(phone);
         System.out.println(origin_code);
-
+        Map<String, String> map = new HashMap<>();
         if (origin_code.equals(code) && list1.size() == 1) {
             criteria.andPhoneEqualTo(phone);
             List<User> list = userService.selectByExample(userExample);
+
             if (list.size() == 1) {
                 User user = new User();
                 User u = list.get(0);
@@ -188,14 +195,14 @@ public class UserController {
                 user.setPhone(u.getPhone());
                 user.setPassword(u.getPassword());
                 user.setUserId(u.getUserId());
-                return new Gson().toJson(user);
+                req.removeAttribute(phone);
+                map.put("message", "success");
+                map.put("user", new Gson().toJson(user));
+                req.removeAttribute(phone);
+                return new Gson().toJson(map);
             }
         }
-        Map<String, String> map = new HashMap<>();
         map.put("message", "验证码不正确或手机号不存在");
         return new Gson().toJson(map);
-
     }
-
-
 }
