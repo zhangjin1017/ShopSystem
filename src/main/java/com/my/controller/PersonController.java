@@ -92,9 +92,6 @@ public class PersonController {
         user.setPhone(phone);
 
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andUserIdEqualTo(id);
-        userMapper.updateByExampleSelective(user, userExample);
-        map.put("code", "SUCCESS");
 
         map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
         return gson.toJson(map);
@@ -115,6 +112,9 @@ public class PersonController {
         user.setPassword(password);
         userExample.createCriteria().andUserIdEqualTo(id);
         userMapper.updateByExampleSelective(user, userExample);
+        userExample.createCriteria().andUserIdEqualTo(id);
+        userMapper.updateByExampleSelective(user, userExample);
+        map.put("code", "SUCCESS");
 
         map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
         map.put("code","SUCCESS");
