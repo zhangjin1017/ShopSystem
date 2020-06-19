@@ -6,6 +6,7 @@ import com.my.dao.UserMapper;
 import com.my.pojo.Person;
 import com.my.pojo.PersonExample;
 import com.my.pojo.User;
+import com.my.pojo.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,7 +41,7 @@ public class PersonController {
         this.userMapper = userMapper;
     }
 
-    @RequestMapping("/getInfo")
+    @RequestMapping(value = "/getInfo", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String getInfo(@RequestParam("userId") String userId) {
         Map<String, String> map = new HashMap<>();
@@ -51,6 +52,7 @@ public class PersonController {
             List<Person> list = personMapper.selectByExample(personExample);
             if (list.size() == 1) {
                 Person person = list.get(0);
+                System.out.println(person);
                 Date date = person.getBirth();
                 map.put("code", "SUCCESS");
                 map.put("person", gson.toJson(person));
@@ -62,7 +64,7 @@ public class PersonController {
         return gson.toJson(map);
     }
 
-    @RequestMapping("/updateInfo")
+    @RequestMapping(value = "/updateInfo", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String updateInfo(@RequestParam("userId") String userId,
                              @RequestParam("name") String name,
@@ -86,10 +88,36 @@ public class PersonController {
         personExample.createCriteria().andUserIdEqualTo(id);
         personMapper.updateByExampleSelective(person, personExample);
         User user = new User();
-        user.setUserId(id);
+//        user.setUserId(id);
         user.setPhone(phone);
-        userMapper.updateByPrimaryKey(user);
-        return map.put("code", "SUCCESS");
+
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUserIdEqualTo(id);
+        userMapper.updateByExampleSelective(user, userExample);
+        map.put("code", "SUCCESS");
+
+        map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
+        return gson.toJson(map);
     }
 
+
+    @RequestMapping(value = "/updatePassword", produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String updatePassword(@RequestParam("userId") String userId,
+                                 @RequestParam("password") String password) {
+        Map<String, String> map = new HashMap<>();
+
+        int id = Integer.parseInt(userId);
+
+        User user = new User();
+
+        UserExample userExample = new UserExample();
+        user.setPassword(password);
+        userExample.createCriteria().andUserIdEqualTo(id);
+        userMapper.updateByExampleSelective(user, userExample);
+
+        map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
+        map.put("code","SUCCESS");
+        return gson.toJson(map);
+    }
 }

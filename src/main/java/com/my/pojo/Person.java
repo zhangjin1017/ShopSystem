@@ -63,4 +63,15 @@ public class Person {
     public void setBirth(Date birth) {
         this.birth = birth;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "personId=" + personId +
+                ", userId=" + userId +
+                ", name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", birth=" + birth +
+                '}';
+    }
 }
