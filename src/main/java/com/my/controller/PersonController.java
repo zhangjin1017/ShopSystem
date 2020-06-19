@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @CrossOrigin
@@ -122,22 +119,38 @@ public class PersonController {
         map.put("code", "SUCCESS");
 
         map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
-        map.put("code","SUCCESS");
+        map.put("code", "SUCCESS");
         return gson.toJson(map);
     }
 
     @ResponseBody
     @RequestMapping(value = "/getVipInfo", produces = "text/plain;charset=UTF-8")
-    public String getVipInfo(@RequestParam("userId") String userId){
+    public String getVipInfo(@RequestParam("userId") String userId) {
         Map<String, String> map = new HashMap<>();
 
         int id = Integer.parseInt(userId);
         VipCardExample vipCardExample = new VipCardExample();
         vipCardExample.createCriteria().andUserIdEqualTo(id);
         List<VipCard> list = vipCardMapper.selectByExample(vipCardExample);
-        if(list.size() == 1){
+        if (list.size() == 1) {
+            map.put("code", "SUCCESS");
+            map.put("vip", gson.toJson(list.get(0)));
+        } else {
+            map.put("code", "ERROR");
+        }
+        return gson.toJson(map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/toBeVip", produces = "text/plain;charset=UTF-8")
+    public String toBeVip(@RequestParam("userId") String userId) {
+        Map<String, String> map = new HashMap<>();
+        int id = Integer.parseInt(userId);
+        int cardId = (int) (Math.random()*100000000+1);
+//        System.out.println(cardId);
+        int line = vipCardMapper.insert(new VipCard(cardId+"",id,0.0));
+        if(line == 1){
             map.put("code","SUCCESS");
-            map.put("vip",gson.toJson(list.get(0)));
         }else{
             map.put("code","ERROR");
         }

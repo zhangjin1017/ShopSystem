@@ -10,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:applicationContext.xml"})
@@ -24,6 +25,12 @@ public class UserTest {
         UserExample userExample = new UserExample();
         userExample.setOrderByClause("user_id ASC");
         userService.selectByExample(userExample);
+    }
+
+    @Test
+    public void tetUUID(){
+        int num = (int) (Math.random()*100000000+1);
+        System.out.println(num);
     }
 
 }
