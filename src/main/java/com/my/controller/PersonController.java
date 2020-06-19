@@ -3,10 +3,8 @@ package com.my.controller;
 import com.google.gson.Gson;
 import com.my.dao.PersonMapper;
 import com.my.dao.UserMapper;
-import com.my.pojo.Person;
-import com.my.pojo.PersonExample;
-import com.my.pojo.User;
-import com.my.pojo.UserExample;
+import com.my.dao.VipCardMapper;
+import com.my.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,6 +37,13 @@ public class PersonController {
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
+    }
+
+    VipCardMapper vipCardMapper;
+
+    @Autowired
+    public void setVipCardMapper(VipCardMapper vipCardMapper) {
+        this.vipCardMapper = vipCardMapper;
     }
 
     @RequestMapping(value = "/getInfo", produces = "text/plain;charset=UTF-8")
@@ -118,6 +123,24 @@ public class PersonController {
 
         map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
         map.put("code","SUCCESS");
+        return gson.toJson(map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getVipInfo", produces = "text/plain;charset=UTF-8")
+    public String getVipInfo(@RequestParam("userId") String userId){
+        Map<String, String> map = new HashMap<>();
+
+        int id = Integer.parseInt(userId);
+        VipCardExample vipCardExample = new VipCardExample();
+        vipCardExample.createCriteria().andUserIdEqualTo(id);
+        List<VipCard> list = vipCardMapper.selectByExample(vipCardExample);
+        if(list.size() == 1){
+            map.put("code","SUCCESS");
+            map.put("vip",gson.toJson(list.get(0)));
+        }else{
+            map.put("code","ERROR");
+        }
         return gson.toJson(map);
     }
 }
