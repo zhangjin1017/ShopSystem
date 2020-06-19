@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,8 @@ import java.util.Map;
 @Controller
 @CrossOrigin
 public class UserController {
+
+    Map<String, String> codes = new HashMap<>();
 
 
     private UserService userService;
@@ -34,14 +35,14 @@ public class UserController {
 
     @RequestMapping(value = "/phone", produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String phone(@RequestParam("phone") String phone, HttpServletRequest req) {
+    public String phone(@RequestParam("phone") String phone) {
         Map<String, String> map = new HashMap<>();
         String message = PhoneCode.getPhonemsg(phone);
         map.put("message", message);
         if ("true".equals(message)) {
-            System.out.println(PhoneCode.vcode());
-            req.setAttribute(phone, PhoneCode.vcode());
-            System.out.println(req.getParameter(phone));
+            System.out.println(PhoneCode.getCode());
+            codes.put(phone, PhoneCode.getCode());
+            System.out.println(codes.get(phone));
         }
         return new Gson().toJson(map);
     }
@@ -52,8 +53,7 @@ public class UserController {
                            @RequestParam("code") String code,
                            @RequestParam("password") String password,
                            @RequestParam("username") String username,
-                           @RequestParam("imgData") String imgData,
-                           HttpServletRequest req) {
+                           @RequestParam("imgData") String imgData) {
 
         Map<String, String> map = new HashMap();
         UserExample userExample = new UserExample();
@@ -66,7 +66,7 @@ public class UserController {
         List<User> list2 = userService.selectByExample(userExample);
 
         //如果用户名与手机号都没有重复的，执行操作
-        String origin_code = req.getParameter(phone);
+        String origin_code = codes.get(phone);
         System.out.println(origin_code);
 
         if (list1.size() == 0 && list2.size() == 0 && origin_code.equals(code)) {
@@ -84,7 +84,7 @@ public class UserController {
                 int line = userService.insertSelective(user);
                 if (line > 0) {
                     map.put("message", "true");
-                    req.removeAttribute(phone);
+                    codes.remove(phone);
                 } else {
                     map.put("message", "注册失败！请重试！");
                 }
@@ -173,35 +173,30 @@ public class UserController {
     @RequestMapping(value = "/loginByPhone", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String loginByPhone(@RequestParam("phone") String phone,
-                               @RequestParam("code") String code,
-                               HttpServletRequest req) {
+                               @RequestParam("code") String code) {
         UserExample userExample = new UserExample();
-        UserExample.Criteria criteria = userExample.createCriteria();
 
         userExample.createCriteria().andPhoneEqualTo(phone);//对比手机号是否重复
         List<User> list1 = userService.selectByExample(userExample);
 
-        String origin_code = req.getParameter(phone);
+        String origin_code = codes.get(phone);
         System.out.println(origin_code);
+        System.out.println(code);
         Map<String, String> map = new HashMap<>();
         if (origin_code.equals(code) && list1.size() == 1) {
-            criteria.andPhoneEqualTo(phone);
-            List<User> list = userService.selectByExample(userExample);
 
-            if (list.size() == 1) {
-                User user = new User();
-                User u = list.get(0);
-                user.setUsername(u.getUsername());
-                user.setPhone(u.getPhone());
-                user.setPassword(u.getPassword());
-                user.setUserId(u.getUserId());
-                req.removeAttribute(phone);
-                map.put("message", "success");
-                map.put("user", new Gson().toJson(user));
-                req.removeAttribute(phone);
-                return new Gson().toJson(map);
-            }
+            User user = new User();
+            User u = list1.get(0);
+            user.setUsername(u.getUsername());
+            user.setPhone(u.getPhone());
+            user.setPassword(u.getPassword());
+            user.setUserId(u.getUserId());
+            codes.remove(phone);
+            map.put("message", "success");
+            map.put("user", new Gson().toJson(user));
+            return new Gson().toJson(map);
         }
+
         map.put("message", "验证码不正确或手机号不存在");
         return new Gson().toJson(map);
     }
