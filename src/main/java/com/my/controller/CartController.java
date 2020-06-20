@@ -32,13 +32,14 @@ public class CartController {
 
         Cart cart = new Cart(null,userId,goodsId,num,0);
         int line = cartMapper.insert(cart);
-        Map<String,String> map = new HashMap();
+        Map<String,String> map = new HashMap<>();
 
         if(line > 0){
             map.put("code","SUCCESS");
         }else{
             map.put("code","ERROR");
         }
+        System.out.println();
         System.out.println();
         return gson.toJson(map);
 
