@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
-@CrossOrigin
 @RequestMapping("/person")
 public class PersonController {
 
@@ -94,7 +93,7 @@ public class PersonController {
         user.setPhone(phone);
 
         UserExample userExample = new UserExample();
-
+        map.put("code", "SUCCESS");
         map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
         return gson.toJson(map);
     }
@@ -146,13 +145,13 @@ public class PersonController {
     public String toBeVip(@RequestParam("userId") String userId) {
         Map<String, String> map = new HashMap<>();
         int id = Integer.parseInt(userId);
-        int cardId = (int) (Math.random()*100000000+1);
+        int cardId = (int) (Math.random() * 100000000 + 1);
 //        System.out.println(cardId);
-        int line = vipCardMapper.insert(new VipCard(cardId+"",id,0.0));
-        if(line == 1){
-            map.put("code","SUCCESS");
-        }else{
-            map.put("code","ERROR");
+        int line = vipCardMapper.insert(new VipCard(cardId + "", id, 0.0));
+        if (line == 1) {
+            map.put("code", "SUCCESS");
+        } else {
+            map.put("code", "ERROR");
         }
         return gson.toJson(map);
     }
