@@ -94,4 +94,18 @@ public class Goods {
     public void setInfo(String info) {
         this.info = info == null ? null : info.trim();
     }
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "goodsId=" + goodsId +
+                ", businessId=" + businessId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", typeId=" + typeId +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", stock=" + stock +
+                ", info='" + info + '\'' +
+                '}';
+    }
 }
