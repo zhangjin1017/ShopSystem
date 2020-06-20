@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.my.dao.GoodsMapper;
 import com.my.dao.PersonMapper;
 import com.my.pojo.Goods;
+import com.my.pojo.GoodsExample;
 import com.my.pojo.User;
 import com.my.pojo.UserExample;
 import com.my.service.UserService;
@@ -39,14 +40,27 @@ public class GoodsController {
 
     @RequestMapping(value = "/searchGoods", produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String searchGoods(@RequestParam("goodsName") String goodsName) {
-        Map<String, List> map = new HashMap<>();
+    public String searchGoods(@RequestParam("searchInfo") String searchInfo,
+                              @RequestParam("searchInfoType") String type) {
+        Map<String, String> map = new HashMap<>();
 //        如果搜索框为空，则返回所有商品
-        if (goodsName == null) {
-            List<Goods> list = goodsMapper.selectByExample(null);
-            map.put("goodsList", list);
+        List<Goods> list;
+        if (type.equals("0")) {
+            list = goodsMapper.selectByExample(null);
+            map.put("goodsList", gson.toJson(list));
             System.out.println(1);
+        } else {
+            GoodsExample goodsExample = new GoodsExample();
+            goodsExample.createCriteria().andNameLike("%" + searchInfo + "%");
+            list = goodsMapper.selectByExample(goodsExample);
         }
-        return null;
+
+        if(list.size() == 0 ){
+            map.put("code","EMPTY");
+        }else{
+            map.put("code","SUCCESS");
+            map.put("goodsList",gson.toJson(list));
+        }
+        return gson.toJson(map);
     }
 }
