@@ -45,8 +45,7 @@ public class GoodsController {
         if (goodsName == null) {
             List<Goods> list = goodsMapper.selectByExample(null);
             map.put("goodsList", list);
-
-
+            System.out.println(1);
         }
         return null;
     }
