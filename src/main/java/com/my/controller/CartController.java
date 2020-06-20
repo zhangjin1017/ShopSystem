@@ -60,18 +60,31 @@ public class CartController {
         CartExample cartExample = new CartExample();
         cartExample.createCriteria().andUserIdEqualTo(userId);
         List<Cart> cartList = cartMapper.selectByExample(cartExample);
-        Map<String,String> map = new HashMap<>();
-        if(cartList.size() > 0){
+        Map<String, String> map = new HashMap<>();
+        if (cartList.size() > 0) {
             List<Goods> goodsList = new ArrayList<>();
-            for(Cart cart:cartList){
+            for (Cart cart : cartList) {
                 int goodId = cart.getGoodsId();
                 goodsList.add(goodsMapper.selectByPrimaryKey(goodId));
             }
+            map.put("code", "SUCCESS");
+            map.put("cartList", gson.toJson(cartList));
+            map.put("goodsList", gson.toJson(goodsList));
+        } else {
+            map.put("code", "EMPTY");
+        }
+        return gson.toJson(map);
+    }
+
+    @ResponseBody
+    @RequestMapping("/delCartGoods")
+    public String delCartGoods(@RequestParam("cartId") int cartId) {
+        int line = cartMapper.deleteByPrimaryKey(cartId);
+        Map<String, String> map = new HashMap<>();
+        if (line > 0){
             map.put("code","SUCCESS");
-            map.put("cartList",gson.toJson(cartList));
-            map.put("goodsList",gson.toJson(goodsList));
         }else{
-            map.put("code","EMPTY");
+            map.put("code","ERROR");
         }
         return gson.toJson(map);
     }
