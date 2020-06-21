@@ -15,8 +15,8 @@ public class PersonServiceImp implements PersonService {
     private PersonMapper personMapper;
 
     @Autowired
-    public PersonMapper getPersonMapper() {
-        return personMapper;
+    public void setPersonMapper(PersonMapper personMapper) {
+        this.personMapper = personMapper;
     }
 
 
@@ -47,6 +47,7 @@ public class PersonServiceImp implements PersonService {
 
     @Override
     public List<Person> selectByExample(PersonExample example) {
+        System.out.println(example);
         return personMapper.selectByExample(example);
     }
 

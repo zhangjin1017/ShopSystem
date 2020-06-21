@@ -9,6 +9,7 @@ import com.my.pojo.CartExample;
 import com.my.pojo.Goods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,8 +38,9 @@ public class CartController {
 
     Gson gson = new Gson();
 
+
+    @RequestMapping(value = "/addToCart", produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    @RequestMapping("/addToCart")
     public String addToCart(@RequestParam("goodsId") int goodsId,
                             @RequestParam("userId") int userId,
                             @RequestParam("num") int num) {
@@ -56,7 +58,7 @@ public class CartController {
     }
 
     @ResponseBody
-    @RequestMapping("/getCarts")
+    @RequestMapping(value = "/getCarts", produces = "text/plain;charset=UTF-8")
     public String getCarts(@RequestParam("userId") int userId) {
         CartExample cartExample = new CartExample();
         cartExample.createCriteria().andUserIdEqualTo(userId);
@@ -78,7 +80,7 @@ public class CartController {
     }
 
     @ResponseBody
-    @RequestMapping("/delCartGoods")
+    @RequestMapping(value = "/delCartGoods", produces = "text/plain;charset=UTF-8")
     public String delCartGoods(@RequestParam("cartId") int cartId) {
         int line = cartMapper.deleteByPrimaryKey(cartId);
         Map<String, String> map = new HashMap<>();
@@ -91,7 +93,7 @@ public class CartController {
     }
 
     @ResponseBody
-    @RequestMapping("/getOrders")
+    @RequestMapping(value = "/getOrders", produces = "text/plain;charset=UTF-8")
     public String test(@RequestParam("selected") String selected) {
         List<Integer> list = JSONObject.parseArray(selected, Integer.class);
         Map<String, String> map = new HashMap<>();

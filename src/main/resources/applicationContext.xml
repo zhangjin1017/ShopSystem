@@ -33,8 +33,8 @@
         <property name="basePackage" value="com.my.dao"/>
     </bean>
     <!--扫描service-->
+    <context:component-scan base-package="com.my.service.*"/>
     <context:component-scan base-package="com.my.service"/>
-
 
 <!--    <mvc:resources mapping="/images/**" location="/images/" />-->
 
