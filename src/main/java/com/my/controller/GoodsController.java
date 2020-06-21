@@ -3,9 +3,9 @@ package com.my.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
-import com.my.dao.BusinessMapper;
-import com.my.dao.GoodsMapper;
 import com.my.pojo.*;
+import com.my.service.BusinessService;
+import com.my.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,18 +23,18 @@ public class GoodsController {
 
     Gson gson = new Gson();
 
-    GoodsMapper goodsMapper;
+    GoodsService goodsService;
 
     @Autowired
-    public void setGoodsMapper(GoodsMapper goodsMapper) {
-        this.goodsMapper = goodsMapper;
+    public void setGoodsService(GoodsService goodsService) {
+        this.goodsService = goodsService;
     }
 
-    BusinessMapper businessMapper;
+    BusinessService businessService;
 
     @Autowired
-    public void setBusinessMapper(BusinessMapper businessMapper) {
-        this.businessMapper = businessMapper;
+    public void setBusinessService(BusinessService businessService) {
+        this.businessService = businessService;
     }
 
     /**
@@ -58,13 +58,13 @@ public class GoodsController {
 
         List<Goods> list;
         if (type.equals("0")) {
-            list = goodsMapper.selectByExample(null);
+            list = goodsService.selectByExample(null);
             map.put("goodsList", gson.toJson(list));
             System.out.println(1);
         } else {
             GoodsExample goodsExample = new GoodsExample();
             goodsExample.createCriteria().andNameLike("%" + searchInfo + "%");
-            list = goodsMapper.selectByExample(goodsExample);
+            list = goodsService.selectByExample(goodsExample);
         }
 
         if (list.size() == 0) {
@@ -73,7 +73,7 @@ public class GoodsController {
             List<Business> businessList = new ArrayList<>();
             for (Goods goods : list) {
                 int businessId = goods.getBusinessId();
-                Business business = businessMapper.selectByPrimaryKey(businessId);
+                Business business = businessService.selectByPrimaryKey(businessId);
                 businessList.add(business);
             }
             map.put("code", "SUCCESS");

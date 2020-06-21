@@ -13,11 +13,11 @@ import java.util.List;
 public class GoodsListServiceImp implements GoodsListService {
 
     private GoodsListMapper goodsListMapper;
+
     @Autowired
     public void setGoodsListMapper(GoodsListMapper goodsListMapper) {
         this.goodsListMapper = goodsListMapper;
     }
-
 
 
     @Override

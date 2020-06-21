@@ -3,7 +3,7 @@ package com.my.pojo;
 import java.util.Date;
 
 public class Orders {
-    private String orderId;
+    private Integer orderId;
 
     private Integer businessId;
 
@@ -19,26 +19,14 @@ public class Orders {
 
     private String logistics;
 
-    public Orders() {
-    }
+    private Integer num;
 
-    public Orders(String orderId, Integer businessId, Integer userId, Integer goodsId, Date date, Integer type, Integer addressId, String logistics) {
-        this.orderId = orderId;
-        this.businessId = businessId;
-        this.userId = userId;
-        this.goodsId = goodsId;
-        this.date = date;
-        this.type = type;
-        this.addressId = addressId;
-        this.logistics = logistics;
-    }
-
-    public String getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     public Integer getBusinessId() {
@@ -95,5 +83,13 @@ public class Orders {
 
     public void setLogistics(String logistics) {
         this.logistics = logistics == null ? null : logistics.trim();
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 }

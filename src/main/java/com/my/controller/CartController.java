@@ -2,11 +2,11 @@ package com.my.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
-import com.my.dao.CartMapper;
-import com.my.dao.GoodsMapper;
 import com.my.pojo.Cart;
 import com.my.pojo.CartExample;
 import com.my.pojo.Goods;
+import com.my.service.CartService;
+import com.my.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,18 +22,18 @@ import java.util.Map;
 @Controller
 public class CartController {
 
-    CartMapper cartMapper;
+    CartService cartService;
 
     @Autowired
-    public void setCartMapper(CartMapper cartMapper) {
-        this.cartMapper = cartMapper;
+    public void setCartService(CartService cartService) {
+        this.cartService = cartService;
     }
 
-    GoodsMapper goodsMapper;
+    GoodsService goodsService;
 
     @Autowired
-    public void setGoodsMapper(GoodsMapper goodsMapper) {
-        this.goodsMapper = goodsMapper;
+    public void setGoodsService(GoodsService goodsService) {
+        this.goodsService = goodsService;
     }
 
     Gson gson = new Gson();
@@ -46,7 +46,7 @@ public class CartController {
                             @RequestParam("num") int num) {
 
         Cart cart = new Cart(null, userId, goodsId, num, 0);
-        int line = cartMapper.insert(cart);
+        int line = cartService.insert(cart);
         Map<String, String> map = new HashMap<>();
 
         if (line > 0) {
@@ -62,13 +62,13 @@ public class CartController {
     public String getCarts(@RequestParam("userId") int userId) {
         CartExample cartExample = new CartExample();
         cartExample.createCriteria().andUserIdEqualTo(userId);
-        List<Cart> cartList = cartMapper.selectByExample(cartExample);
+        List<Cart> cartList = cartService.selectByExample(cartExample);
         Map<String, String> map = new HashMap<>();
         if (cartList.size() > 0) {
             List<Goods> goodsList = new ArrayList<>();
             for (Cart cart : cartList) {
                 int goodId = cart.getGoodsId();
-                goodsList.add(goodsMapper.selectByPrimaryKey(goodId));
+                goodsList.add(goodsService.selectByPrimaryKey(goodId));
             }
             map.put("code", "SUCCESS");
             map.put("cartList", gson.toJson(cartList));
@@ -82,7 +82,7 @@ public class CartController {
     @ResponseBody
     @RequestMapping(value = "/delCartGoods", produces = "text/plain;charset=UTF-8")
     public String delCartGoods(@RequestParam("cartId") int cartId) {
-        int line = cartMapper.deleteByPrimaryKey(cartId);
+        int line = cartService.deleteByPrimaryKey(cartId);
         Map<String, String> map = new HashMap<>();
         if (line > 0) {
             map.put("code", "SUCCESS");
@@ -100,11 +100,11 @@ public class CartController {
         List<Cart> carts = new ArrayList<>();
         List<Goods> goods = new ArrayList<>();
         for (Integer i : list) {
-            Cart cart=cartMapper.selectByPrimaryKey(i);
+            Cart cart = cartService.selectByPrimaryKey(i);
             carts.add(cart);
 
             int goodId = cart.getGoodsId();
-            goods.add(goodsMapper.selectByPrimaryKey(goodId));
+            goods.add(goodsService.selectByPrimaryKey(goodId));
         }
         map.put("code", "SUCCESS");
         map.put("cartList", gson.toJson(carts));

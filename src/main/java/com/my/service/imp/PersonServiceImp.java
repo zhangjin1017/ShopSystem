@@ -58,7 +58,7 @@ public class PersonServiceImp implements PersonService {
 
     @Override
     public int updateByExampleSelective(Person record, PersonExample example) {
-        return personMapper.updateByExampleSelective(record,example);
+        return personMapper.updateByExampleSelective(record, example);
     }
 
     @Override

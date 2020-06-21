@@ -1,13 +1,12 @@
 package com.my.controller;
 
 import com.google.gson.Gson;
-import com.my.dao.PersonMapper;
-import com.my.dao.UserMapper;
-import com.my.dao.VipCardMapper;
 import com.my.pojo.*;
+import com.my.service.PersonService;
+import com.my.service.UserService;
+import com.my.service.VipCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,26 +19,26 @@ import java.util.*;
 @RequestMapping("/person")
 public class PersonController {
 
-    PersonMapper personMapper;
+    PersonService personService;
     Gson gson = new Gson();
 
     @Autowired
-    public void setPersonMapper(PersonMapper personMapper) {
-        this.personMapper = personMapper;
+    public void setPersonService(PersonService personService) {
+        this.personService = personService;
     }
 
-    UserMapper userMapper;
+    UserService userService;
 
     @Autowired
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
-    VipCardMapper vipCardMapper;
+    VipCardService vipCardService;
 
     @Autowired
-    public void setVipCardMapper(VipCardMapper vipCardMapper) {
-        this.vipCardMapper = vipCardMapper;
+    public void setVipCardService(VipCardService vipCardService) {
+        this.vipCardService = vipCardService;
     }
 
     @RequestMapping(value = "/getInfo", produces = "text/plain;charset=UTF-8")
@@ -50,7 +49,7 @@ public class PersonController {
             int id = Integer.parseInt(userId);
             PersonExample personExample = new PersonExample();
             personExample.createCriteria().andUserIdEqualTo(id);
-            List<Person> list = personMapper.selectByExample(personExample);
+            List<Person> list = personService.selectByExample(personExample);
             if (list.size() == 1) {
                 Person person = list.get(0);
                 System.out.println(person);
@@ -87,14 +86,14 @@ public class PersonController {
         }
         PersonExample personExample = new PersonExample();
         personExample.createCriteria().andUserIdEqualTo(id);
-        personMapper.updateByExampleSelective(person, personExample);
+        personService.updateByExampleSelective(person, personExample);
         User user = new User();
 //        user.setUserId(id);
         user.setPhone(phone);
 
         UserExample userExample = new UserExample();
         map.put("code", "SUCCESS");
-        map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
+        map.put("user", gson.toJson(userService.selectByPrimaryKey(id)));
         return gson.toJson(map);
     }
 
@@ -112,12 +111,12 @@ public class PersonController {
         UserExample userExample = new UserExample();
         user.setPassword(password);
         userExample.createCriteria().andUserIdEqualTo(id);
-        userMapper.updateByExampleSelective(user, userExample);
+        userService.updateByExampleSelective(user, userExample);
         userExample.createCriteria().andUserIdEqualTo(id);
-        userMapper.updateByExampleSelective(user, userExample);
+        userService.updateByExampleSelective(user, userExample);
         map.put("code", "SUCCESS");
 
-        map.put("user", gson.toJson(userMapper.selectByPrimaryKey(id)));
+        map.put("user", gson.toJson(userService.selectByPrimaryKey(id)));
         map.put("code", "SUCCESS");
         return gson.toJson(map);
     }
@@ -130,7 +129,7 @@ public class PersonController {
         int id = Integer.parseInt(userId);
         VipCardExample vipCardExample = new VipCardExample();
         vipCardExample.createCriteria().andUserIdEqualTo(id);
-        List<VipCard> list = vipCardMapper.selectByExample(vipCardExample);
+        List<VipCard> list = vipCardService.selectByExample(vipCardExample);
         if (list.size() == 1) {
             map.put("code", "SUCCESS");
             map.put("vip", gson.toJson(list.get(0)));
@@ -147,7 +146,7 @@ public class PersonController {
         int id = Integer.parseInt(userId);
         int cardId = (int) (Math.random() * 100000000 + 1);
 //        System.out.println(cardId);
-        int line = vipCardMapper.insert(new VipCard(cardId + "", id, 0.0));
+        int line = vipCardService.insert(new VipCard(cardId + "", id, 0.0));
         if (line == 1) {
             map.put("code", "SUCCESS");
         } else {

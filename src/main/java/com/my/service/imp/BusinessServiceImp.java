@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class BusinessServiceImp implements BusinessService {
 
     private BusinessMapper businessMapper;
+
     @Autowired
     public void setBusinessMapper(BusinessMapper businessMapper) {
         this.businessMapper = businessMapper;

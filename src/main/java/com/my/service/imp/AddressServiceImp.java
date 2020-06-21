@@ -12,8 +12,8 @@ import java.util.List;
 @Service
 public class AddressServiceImp implements AddressService {
     private AddressMapper addressMapper;
-    @Autowired
 
+    @Autowired
     public void setAddressMapper(AddressMapper addressMapper) {
         this.addressMapper = addressMapper;
     }

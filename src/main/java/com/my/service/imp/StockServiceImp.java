@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class StockServiceImp implements StockService {
     private StockMapper stockMapper;
@@ -54,7 +55,7 @@ public class StockServiceImp implements StockService {
 
     @Override
     public int updateByExampleSelective(Stock record, StockExample example) {
-        return stockMapper.updateByExampleSelective(record,example);
+        return stockMapper.updateByExampleSelective(record, example);
     }
 
     @Override
