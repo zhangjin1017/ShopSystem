@@ -68,25 +68,23 @@ public class AddressController {
                              @RequestParam("address2") String address2) {
         Map<String, String> map = new HashMap<>();
 
-        System.out.println(address1);
-        if (false) {
-            String[] addressArray = address1.split(" ");
-            Address address = new Address();
-            address.setProvince(addressArray[0]);
-            address.setCity(addressArray[1]);
-            address.setDistrict(addressArray[2]);
-            address.setAddress(address2);
-            address.setUserId(userId);
+        String[] addressArray = address1.split(" ");
+        Address address = new Address();
+        address.setProvince(addressArray[0]);
+        address.setCity(addressArray[1]);
+        address.setDistrict(addressArray[2]);
+        address.setAddress(address2);
+        address.setUserId(userId);
 
-            int line = addressService.insertSelective(address);
-            if (line > 0) {
-                map.put("code", "SUCCESS");
-            } else {
-                map.put("code", "FALSE");
-            }
-            System.out.println("hello");
-            System.out.println("hello");
+        int line = addressService.insertSelective(address);
+        if (line > 0) {
+            map.put("code", "SUCCESS");
+        } else {
+            map.put("code", "FALSE");
         }
+        System.out.println("hello");
+        System.out.println("hello");
+
         return gson.toJson(map);
     }
 
