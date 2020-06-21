@@ -3,6 +3,11 @@ package com.my.pojo;
 import java.util.Date;
 
 public class Orders {
+
+    public static int Not_Delivered = 0;//未发货
+    public static int Delivered = 1;//已发货
+    public static int Receipt = 2;//已收货
+
     private Integer orderId;
 
     private Integer businessId;

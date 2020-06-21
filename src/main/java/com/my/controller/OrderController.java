@@ -112,7 +112,21 @@ public class OrderController {
             map.put("code", "ERROR");
         }
         return gson.toJson(map);
-
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/confirm", produces = "text/plain;charset=UTF-8")
+    public String confirm(@RequestParam("orderId") int id) {
+        Orders orders = ordersService.selectByPrimaryKey(id);
+        orders.setType(Orders.Delivered);
+        int line = ordersService.updateByPrimaryKey(orders);
+
+        Map<String, String> map = new HashMap<>();
+        if (line > 0) {
+            map.put("code", "SUCCESS");
+        } else {
+            map.put("code", "FALSE");
+        }
+        return gson.toJson(map);
+    }
 }
