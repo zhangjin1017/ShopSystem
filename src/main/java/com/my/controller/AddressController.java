@@ -102,4 +102,36 @@ public class AddressController {
         return gson.toJson(map);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/changeAddress", produces = "text/plain;charset=UTF-8")
+    public String changeAddress(@RequestParam("addressId") int addressId,
+                                @RequestParam("address1") String address1,
+                                @RequestParam("address2") String address2) {
+        Map<String, String> map = new HashMap<>();
+        Address address = new Address();
+        if(address1 != null){
+            String[] addressArray = address1.split(" ");
+
+            address.setProvince(addressArray[0]);
+            address.setCity(addressArray[1]);
+            address.setDistrict(addressArray[2]);
+        }
+        if(address2 != null){
+            address.setAddress(address2);
+        }
+
+        address.setAddressId(addressId);
+
+        int line = addressService.updateByPrimaryKeySelective(address);
+        if (line > 0) {
+            map.put("code", "SUCCESS");
+        } else {
+            map.put("code", "FALSE");
+        }
+        System.out.println("hello");
+        System.out.println("hello");
+
+        return gson.toJson(map);
+    }
+
 }
