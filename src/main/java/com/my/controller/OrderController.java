@@ -83,7 +83,7 @@ public class OrderController {
 
                 cartService.deleteByPrimaryKey(cartId);
 
-                Stock stock = new Stock(null, goodsId, 0, new Date(), cart.getNum());
+                Stock stock = new Stock(null, goodsId, 1, new Date(), cart.getNum());
                 stockService.insert(stock);
             } else {
                 return gson.toJson("ERROR");
