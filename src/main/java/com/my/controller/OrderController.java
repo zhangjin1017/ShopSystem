@@ -3,10 +3,7 @@ package com.my.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.my.pojo.*;
-import com.my.service.AddressService;
-import com.my.service.CartService;
-import com.my.service.GoodsService;
-import com.my.service.OrdersService;
+import com.my.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +45,13 @@ public class OrderController {
         this.goodsService = goodsService;
     }
 
+    StockService stockService;
+
+    @Autowired
+    public void setStockService(StockService stockService) {
+        this.stockService = stockService;
+    }
+
     Gson gson = new Gson();
 
     @ResponseBody
@@ -74,13 +78,16 @@ public class OrderController {
 
             ordersService.insertSelective(orders);
 
-            goods.setStock(goods.getStock()-cart.getNum());
+            goods.setStock(goods.getStock() - cart.getNum());
             GoodsExample goodsExample = new GoodsExample();
             goodsExample.createCriteria().andGoodsIdEqualTo(goodsId);
-            goodsService.updateByExample(goods,goodsExample);
+            goodsService.updateByExample(goods, goodsExample);
 
 
             cartService.deleteByPrimaryKey(cartId);
+
+            Stock stock = new Stock(null, goodsId, 0, new Date(), cart.getNum());
+            stockService.insert(stock);
 
         }
         return gson.toJson("SUCCESS");
@@ -95,10 +102,10 @@ public class OrderController {
         ordersExample.createCriteria().andUserIdEqualTo(userId);
         List<Orders> orders = ordersService.selectByExample(ordersExample);
         if (orders.size() > 0) {
-            map.put("ordersList",gson.toJson(orders));
-            map.put("code","SUCCESS");
-        }else{
-            map.put("code","ERROR");
+            map.put("ordersList", gson.toJson(orders));
+            map.put("code", "SUCCESS");
+        } else {
+            map.put("code", "ERROR");
         }
         return gson.toJson(map);
 
