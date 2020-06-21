@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class OrderController {
@@ -55,7 +52,7 @@ public class OrderController {
     Gson gson = new Gson();
 
     @ResponseBody
-    @RequestMapping("/pushOrders")
+    @RequestMapping(value = "/pushOrders", produces = "text/plain;charset=UTF-8")
     public String pushOrders(@RequestParam("addressId") int addressId,
                              @RequestParam("cartIds") String cartIds) {
         List<Integer> list = JSONObject.parseArray(cartIds, Integer.class);
@@ -64,7 +61,7 @@ public class OrderController {
             Cart cart = cartService.selectByPrimaryKey(cartId);
             int goodsId = cart.getGoodsId();
             Goods goods = goodsService.selectByPrimaryKey(goodsId);
-            if(goods.getStock() >= cart.getNum()){
+            if (goods.getStock() >= cart.getNum()) {
                 Orders orders = new Orders();
                 int businessId = goods.getBusinessId();
                 orders.setBusinessId(businessId);
@@ -88,7 +85,7 @@ public class OrderController {
 
                 Stock stock = new Stock(null, goodsId, 0, new Date(), cart.getNum());
                 stockService.insert(stock);
-            }else{
+            } else {
                 return gson.toJson("ERROR");
             }
         }
@@ -97,13 +94,18 @@ public class OrderController {
 
 
     @ResponseBody
-    @RequestMapping("/showOrders")
+    @RequestMapping(value = "/showOrders", produces = "text/plain;charset=UTF-8")
     public String showOrders(@RequestParam("userId") int userId) {
         Map<String, String> map = new HashMap<>();
         OrdersExample ordersExample = new OrdersExample();
         ordersExample.createCriteria().andUserIdEqualTo(userId);
         List<Orders> orders = ordersService.selectByExample(ordersExample);
+        List<Goods> goods = new ArrayList<>();
+        for (Orders order : orders) {
+            goods.add(goodsService.selectByPrimaryKey(order.getGoodsId()));
+        }
         if (orders.size() > 0) {
+            map.put("goodsList", gson.toJson(goods));
             map.put("ordersList", gson.toJson(orders));
             map.put("code", "SUCCESS");
         } else {

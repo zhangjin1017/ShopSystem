@@ -89,4 +89,19 @@ public class AddressController {
         }
         return gson.toJson(map);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/deleteAddress", produces = "text/plain;charset=UTF-8")
+    public String deleteAddress(@RequestParam("addressId") int addressId) {
+        Map<String, String> map = new HashMap<>();
+
+        int line = addressService.deleteByPrimaryKey(addressId);
+        if (line > 0) {
+            map.put("code", "SUCCESS");
+        } else {
+            map.put("code", "FALSE");
+        }
+        return gson.toJson(map);
+    }
+
 }
