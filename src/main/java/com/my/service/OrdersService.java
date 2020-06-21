@@ -11,7 +11,7 @@ public interface OrdersService {
 
     int deleteByExample(OrdersExample example);
 
-    int deleteByPrimaryKey(String orderId);
+    int deleteByPrimaryKey(Integer orderId);
 
     int insert(Orders record);
 
@@ -19,7 +19,7 @@ public interface OrdersService {
 
     List<Orders> selectByExample(OrdersExample example);
 
-    Orders selectByPrimaryKey(String orderId);
+    Orders selectByPrimaryKey(Integer orderId);
 
     int updateByExampleSelective(@Param("record") Orders record, @Param("example") OrdersExample example);
 

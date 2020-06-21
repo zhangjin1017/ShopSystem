@@ -29,7 +29,7 @@ public class OrdersServiceImp implements OrdersService {
     }
 
     @Override
-    public int deleteByPrimaryKey(String orderId) {
+    public int deleteByPrimaryKey(Integer orderId) {
         return ordersMapper.deleteByPrimaryKey(orderId);
     }
 
@@ -49,7 +49,7 @@ public class OrdersServiceImp implements OrdersService {
     }
 
     @Override
-    public Orders selectByPrimaryKey(String orderId) {
+    public Orders selectByPrimaryKey(Integer orderId) {
         return ordersMapper.selectByPrimaryKey(orderId);
     }
 
