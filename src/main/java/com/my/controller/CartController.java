@@ -1,5 +1,6 @@
 package com.my.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.my.dao.CartMapper;
 import com.my.dao.GoodsMapper;
@@ -81,11 +82,32 @@ public class CartController {
     public String delCartGoods(@RequestParam("cartId") int cartId) {
         int line = cartMapper.deleteByPrimaryKey(cartId);
         Map<String, String> map = new HashMap<>();
-        if (line > 0){
-            map.put("code","SUCCESS");
-        }else{
-            map.put("code","ERROR");
+        if (line > 0) {
+            map.put("code", "SUCCESS");
+        } else {
+            map.put("code", "ERROR");
         }
+        return gson.toJson(map);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getOrders")
+    public String test(@RequestParam("selected") String selected) {
+        List<Integer> list = JSONObject.parseArray(selected, Integer.class);
+        Map<String, String> map = new HashMap<>();
+        List<Cart> carts = new ArrayList<>();
+        List<Goods> goods = new ArrayList<>();
+        for (Integer i : list) {
+            Cart cart=cartMapper.selectByPrimaryKey(i);
+            carts.add(cart);
+
+            int goodId = cart.getGoodsId();
+            goods.add(goodsMapper.selectByPrimaryKey(goodId));
+        }
+        map.put("code", "SUCCESS");
+        map.put("cartList", gson.toJson(carts));
+        map.put("goodsList", gson.toJson(goods));
+
         return gson.toJson(map);
     }
 }
