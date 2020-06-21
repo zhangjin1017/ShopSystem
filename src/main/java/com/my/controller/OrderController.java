@@ -56,8 +56,7 @@ public class OrderController {
                              @RequestParam("cartIds") String cartIds) {
         List<Integer> list = JSONObject.parseArray(cartIds, Integer.class);
 
-        for (int i : list) {
-            int cartId = list.get(i);
+        for (int cartId : list) {
             Cart cart = cartService.selectByPrimaryKey(cartId);
             int goodsId = cart.getGoodsId();
             Goods goods = goodsService.selectByPrimaryKey(goodsId);
