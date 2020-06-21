@@ -64,31 +64,33 @@ public class OrderController {
             Cart cart = cartService.selectByPrimaryKey(cartId);
             int goodsId = cart.getGoodsId();
             Goods goods = goodsService.selectByPrimaryKey(goodsId);
+            if(goods.getStock() >= cart.getNum()){
+                Orders orders = new Orders();
+                int businessId = goods.getBusinessId();
+                orders.setBusinessId(businessId);
+                orders.setAddressId(addressId);
+                int userId = cart.getUserId();
+                orders.setUserId(userId);
+                orders.setGoodsId(goodsId);
+                orders.setDate(new Date());
+                orders.setType(0);
+                orders.setNum(cart.getNum());
 
-            Orders orders = new Orders();
-            int businessId = goods.getBusinessId();
-            orders.setBusinessId(businessId);
-            orders.setAddressId(addressId);
-            int userId = cart.getUserId();
-            orders.setUserId(userId);
-            orders.setGoodsId(goodsId);
-            orders.setDate(new Date());
-            orders.setType(0);
-            orders.setNum(cart.getNum());
+                ordersService.insertSelective(orders);
 
-            ordersService.insertSelective(orders);
-
-            goods.setStock(goods.getStock() - cart.getNum());
-            GoodsExample goodsExample = new GoodsExample();
-            goodsExample.createCriteria().andGoodsIdEqualTo(goodsId);
-            goodsService.updateByExample(goods, goodsExample);
+                goods.setStock(goods.getStock() - cart.getNum());
+                GoodsExample goodsExample = new GoodsExample();
+                goodsExample.createCriteria().andGoodsIdEqualTo(goodsId);
+                goodsService.updateByExample(goods, goodsExample);
 
 
-            cartService.deleteByPrimaryKey(cartId);
+                cartService.deleteByPrimaryKey(cartId);
 
-            Stock stock = new Stock(null, goodsId, 0, new Date(), cart.getNum());
-            stockService.insert(stock);
-
+                Stock stock = new Stock(null, goodsId, 0, new Date(), cart.getNum());
+                stockService.insert(stock);
+            }else{
+                return gson.toJson("ERROR");
+            }
         }
         return gson.toJson("SUCCESS");
     }
