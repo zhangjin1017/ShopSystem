@@ -2,10 +2,7 @@ package com.my.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
-import com.my.pojo.Cart;
-import com.my.pojo.Goods;
-import com.my.pojo.Orders;
-import com.my.pojo.OrdersExample;
+import com.my.pojo.*;
 import com.my.service.AddressService;
 import com.my.service.CartService;
 import com.my.service.GoodsService;
@@ -77,6 +74,15 @@ public class OrderController {
             orders.setNum(cart.getNum());
 
             ordersService.insertSelective(orders);
+
+            goods.setStock(goods.getStock()-cart.getNum());
+            GoodsExample goodsExample = new GoodsExample();
+            goodsExample.createCriteria().andGoodsIdEqualTo(goodsId);
+            goodsService.updateByExample(goods,goodsExample);
+
+
+            cartService.deleteByPrimaryKey(cartId);
+
         }
         return gson.toJson("SUCCESS");
     }
