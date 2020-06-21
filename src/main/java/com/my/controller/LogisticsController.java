@@ -61,6 +61,7 @@ public class LogisticsController {
         result.put("status", 200);
         result.put("message", "ok");
         result.put("data", dataResult);
+        System.out.println();
         return result + "";
     }
 
