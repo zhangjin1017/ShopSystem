@@ -32,7 +32,7 @@ public class OrdersExample {
         return distinct;
     }
 
-    public List<Criteria> getOredCriteria() {
+    public List<Criteria> getOrderCriteria() {
         return oredCriteria;
     }
 
