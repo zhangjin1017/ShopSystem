@@ -213,6 +213,7 @@ public class GoodsController {
 
         for (int i:list){
             goodsService.deleteByPrimaryKey(i);
+
         }
         return gson.toJson("SUCCESS");
     }
