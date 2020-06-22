@@ -3,6 +3,8 @@ package com.my.pojo;
 import java.util.Date;
 
 public class Stock {
+    public static int IN = 1;
+    public static int OUT =2;
     private Integer stockId;
 
     private Integer goodsId;

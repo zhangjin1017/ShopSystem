@@ -6,16 +6,14 @@ import com.google.gson.Gson;
 import com.my.pojo.*;
 import com.my.service.BusinessService;
 import com.my.service.GoodsService;
+import com.my.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/goods")
@@ -35,6 +33,12 @@ public class GoodsController {
     @Autowired
     public void setBusinessService(BusinessService businessService) {
         this.businessService = businessService;
+    }
+
+    StockService stockService;
+    @Autowired
+    public void setStockService(StockService stockService) {
+        this.stockService = stockService;
     }
 
     /**
@@ -90,5 +94,33 @@ public class GoodsController {
         return gson.toJson(map);
     }
 
+
+    @ResponseBody
+    @RequestMapping("/addGoods")
+    public String addGoods(@RequestParam("businessId")int businessId,
+                           @RequestParam("name")String name,
+                           @RequestParam("price")double price,
+                           @RequestParam("stock")int stock,
+                           @RequestParam("info")String info,
+                           @RequestParam("imgUrl")String imgUrl){
+        Map<String, Object> map = new HashMap<>();
+        Goods goods = new Goods(null,businessId,name,price,1,imgUrl,stock,info);
+        goodsService.insertSelective(goods);
+        GoodsExample goodsExample = new GoodsExample();
+        GoodsExample.Criteria criteria = goodsExample.createCriteria();
+        criteria.andBusinessIdEqualTo(businessId);
+        criteria.andNameEqualTo(name);
+        criteria.andInfoEqualTo(info);
+        criteria.andPriceEqualTo(price);
+
+        Goods goods1 = goodsService.selectByExample(goodsExample).get(0);
+        if(stock != 0){
+            stockService.insertSelective(new Stock(null,goods1.getGoodsId(),Stock.IN,new Date(),stock));
+            map.put("code","SUCCESS");
+            return gson.toJson(map);
+        }
+        map.put("code","ERROR");
+        return gson.toJson(map);
+    }
 
 }
