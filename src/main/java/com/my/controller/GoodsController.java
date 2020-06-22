@@ -1,5 +1,6 @@
 package com.my.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
@@ -203,6 +204,17 @@ public class GoodsController {
         }
         System.out.println();
         return new Gson().toJson(map);
+    }
+
+    @ResponseBody
+    @RequestMapping("/deleteGoods")
+    public String deleteGoods(@RequestParam("selected")String selected){
+        List<Integer> list = JSONArray.parseArray(selected,Integer.class);
+
+        for (int i:list){
+            goodsService.deleteByPrimaryKey(i);
+        }
+        return gson.toJson("SUCCESS");
     }
 }
 
