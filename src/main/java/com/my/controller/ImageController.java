@@ -60,7 +60,7 @@ public class ImageController {
             file.transferTo(new File(filePath, oldName));
             Gson gson = new Gson();
             map.put("code", "000000");
-            map.put("imgUrl", "http://127.0.0.1:8080/ShopSystem/"+path+"/" + oldName);
+            map.put("imgUrl",oldName);
             return gson.toJson(map);
         }
         return null;

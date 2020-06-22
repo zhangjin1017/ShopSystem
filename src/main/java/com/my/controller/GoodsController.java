@@ -150,14 +150,12 @@ public class GoodsController {
                               @RequestParam("imgUrl") String imgUrl) {
         Map<String, String> map = new HashMap<>();
         Goods goods = new Goods(goodsId, null, name, price, 1, imgUrl, stock, info);
-
-        int line = goodsService.updateByPrimaryKeySelective(goods);
-
         Goods goods1 = goodsService.selectByPrimaryKey(goodsId);
+        int line = goodsService.updateByPrimaryKeySelective(goods);
         if (goods1.getStock() < stock) {
             line += stockService.insertSelective(new Stock(null, goodsId, Stock.IN, new Date(), stock - goods1.getStock()));
         } else if (goods1.getStock() > stock) {
-            line += stockService.insertSelective(new Stock(null, goodsId, Stock.IN, new Date(), goods1.getStock() - stock));
+            line += stockService.insertSelective(new Stock(null, goodsId, Stock.OUT, new Date(), goods1.getStock() - stock));
         }
 
         if(line == 0){
