@@ -28,7 +28,7 @@ public class ImageController {
         return "false";
     }
 
-    @RequestMapping(value = "/uploadGoodsImage", produces = "text/plain;charset=UTF-8")
+        @RequestMapping(value = "/uploadGoodsImage", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String uploadGoodsImage(HttpServletRequest request, @RequestParam("file") MultipartFile file) throws IOException {
 
@@ -60,7 +60,7 @@ public class ImageController {
             file.transferTo(new File(filePath, oldName));
             Gson gson = new Gson();
             map.put("code", "000000");
-            map.put("imgUrl", "http://127.0.0.1:8080/ShopSystem/business/" + oldName);
+            map.put("imgUrl", "http://127.0.0.1:8080/ShopSystem/"+path+"/" + oldName);
             return gson.toJson(map);
         }
         return null;

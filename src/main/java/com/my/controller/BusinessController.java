@@ -34,7 +34,7 @@ public class BusinessController {
     }
     Gson gson = new Gson();
 
-    @RequestMapping("/businessRegister")
+    @RequestMapping(value = "/businessRegister", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String businessRegister(@RequestParam("username") String username,
                                    @RequestParam("password") String password,
@@ -68,7 +68,7 @@ public class BusinessController {
         return new Gson().toJson(map);
     }
 
-    @RequestMapping("/businessLogin")
+    @RequestMapping(value = "/businessLogin", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String businessRegister(@RequestParam("username") String username,
                                    @RequestParam("password") String password) {
@@ -87,22 +87,4 @@ public class BusinessController {
         }
         return new Gson().toJson(map);
     }
-    @RequestMapping("/getAllGoods")
-    @ResponseBody
-    public String businessRegister(@RequestParam("businessId") int businessId) {
-        Map<String, String> map = new HashMap<>();
-        GoodsExample goodsExample=new GoodsExample();
-        GoodsExample.Criteria criteria=goodsExample.createCriteria();
-        criteria.andBusinessIdEqualTo(businessId);
-        List<Goods> goodsList=goodsService.selectByExample(goodsExample);
-        System.out.println("goodsList"+goodsList);
-        if(goodsList != null){
-            map.put("code","SUCCESS");
-            map.put("goodsList",gson.toJson(goodsList));
-        }else{
-            map.put("code","您还没有发布商品");
-        }
-        return new Gson().toJson(map);
-    }
-
 }
