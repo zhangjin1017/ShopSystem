@@ -36,6 +36,7 @@ public class GoodsController {
     }
 
     StockService stockService;
+
     @Autowired
     public void setStockService(StockService stockService) {
         this.stockService = stockService;
@@ -86,7 +87,7 @@ public class GoodsController {
             PageInfo pageInfo = new PageInfo<Goods>(list);
 
 
-            map.put("pageCount",pageInfo.getPages());
+            map.put("pageCount", pageInfo.getPages());
             map.put("totalNum", pageInfo.getTotal());
             System.out.println(list);
             System.out.println(businessList);
@@ -97,14 +98,14 @@ public class GoodsController {
 
     @ResponseBody
     @RequestMapping(value = "/addGoods", produces = "text/plain;charset=UTF-8")
-    public String addGoods(@RequestParam("businessId")int businessId,
-                           @RequestParam("name")String name,
-                           @RequestParam("price")double price,
-                           @RequestParam("stock")int stock,
-                           @RequestParam("info")String info,
-                           @RequestParam("imgUrl")String imgUrl){
+    public String addGoods(@RequestParam("businessId") int businessId,
+                           @RequestParam("name") String name,
+                           @RequestParam("price") double price,
+                           @RequestParam("stock") int stock,
+                           @RequestParam("info") String info,
+                           @RequestParam("imgUrl") String imgUrl) {
         Map<String, Object> map = new HashMap<>();
-        Goods goods = new Goods(null,businessId,name,price,1,imgUrl,stock,info);
+        Goods goods = new Goods(null, businessId, name, price, 1, imgUrl, stock, info);
         goodsService.insertSelective(goods);
         GoodsExample goodsExample = new GoodsExample();
         GoodsExample.Criteria criteria = goodsExample.createCriteria();
@@ -114,32 +115,41 @@ public class GoodsController {
         criteria.andPriceEqualTo(price);
 
         Goods goods1 = goodsService.selectByExample(goodsExample).get(0);
-        if(stock != 0){
-            stockService.insertSelective(new Stock(null,goods1.getGoodsId(),Stock.IN,new Date(),stock));
-            map.put("code","SUCCESS");
+        if (stock != 0) {
+            stockService.insertSelective(new Stock(null, goods1.getGoodsId(), Stock.IN, new Date(), stock));
+            map.put("code", "SUCCESS");
             return gson.toJson(map);
         }
-        map.put("code","ERROR");
+        map.put("code", "ERROR");
         return gson.toJson(map);
     }
 
     @RequestMapping(value = "/getAllGoods", produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String getAllGoods(@RequestParam("businessId") int businessId) {
-        Map<String, String> map = new HashMap<>();
-        GoodsExample goodsExample=new GoodsExample();
-        GoodsExample.Criteria criteria=goodsExample.createCriteria();
+    public String getAllGoods(@RequestParam("businessId") int businessId,
+                              @RequestParam("perPageCount") int perPageCount,
+                              @RequestParam("currentPage") int currentPage) {
+        Map<String, Object> map = new HashMap<>();
+        GoodsExample goodsExample = new GoodsExample();
+        GoodsExample.Criteria criteria = goodsExample.createCriteria();
         criteria.andBusinessIdEqualTo(businessId);
-        List<Goods> goodsList=goodsService.selectByExample(goodsExample);
-        System.out.println("goodsList"+goodsList);
-        if(goodsList != null){
-            map.put("code","SUCCESS");
-            map.put("goodsList",gson.toJson(goodsList));
-        }else{
-            map.put("code","您还没有发布商品");
+        PageHelper.startPage(currentPage, perPageCount);
+        List<Goods> goodsList = goodsService.selectByExample(goodsExample);
+        System.out.println("goodsList" + goodsList);
+        if (goodsList != null) {
+            map.put("code", "SUCCESS");
+            PageInfo pageInfo = new PageInfo<Goods>(goodsList);
+
+            map.put("pageCount", pageInfo.getPages());
+            map.put("totalNum", pageInfo.getTotal());
+            map.put("goodsList", gson.toJson(goodsList));
+        } else {
+            map.put("code", "您还没有发布商品");
         }
         return new Gson().toJson(map);
     }
+
+
     @RequestMapping(value = "/changeGoods", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String changeGoods(@RequestParam("goodsId") int goodsId,
@@ -150,22 +160,48 @@ public class GoodsController {
                               @RequestParam("imgUrl") String imgUrl) {
         Map<String, String> map = new HashMap<>();
         Goods goods = new Goods(goodsId, null, name, price, 1, imgUrl, stock, info);
-        Goods goods1 = goodsService.selectByPrimaryKey(goodsId);
+
         int line = goodsService.updateByPrimaryKeySelective(goods);
+
+        Goods goods1 = goodsService.selectByPrimaryKey(goodsId);
         if (goods1.getStock() < stock) {
             line += stockService.insertSelective(new Stock(null, goodsId, Stock.IN, new Date(), stock - goods1.getStock()));
         } else if (goods1.getStock() > stock) {
-            line += stockService.insertSelective(new Stock(null, goodsId, Stock.OUT, new Date(), goods1.getStock() - stock));
+            line += stockService.insertSelective(new Stock(null, goodsId, Stock.IN, new Date(), goods1.getStock() - stock));
         }
 
-        if(line == 0){
-            map.put("code","ERROR");
-        }else{
-            map.put("code","SUCCESS");
+        if (line == 0) {
+            map.put("code", "ERROR");
+        } else {
+            map.put("code", "SUCCESS");
         }
 
         return new Gson().toJson(map);
     }
 
+    @RequestMapping(value = "/searchByName", produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String searchByName(@RequestParam("name") String name,
+                               @RequestParam("perPageCount") int perPageCount,
+                               @RequestParam("currentPage") int currentPage) {
+        Map<String, Object> map = new HashMap<>();
 
+        GoodsExample goodsExample = new GoodsExample();
+        goodsExample.createCriteria().andNameLike("%" + name + "%");
+        PageHelper.startPage(currentPage, perPageCount);
+        List<Goods> goods = goodsService.selectByExample(goodsExample);
+
+        if (goods.size() > 0) {
+            PageInfo pageInfo = new PageInfo<Goods>(goods);
+
+            map.put("pageCount", pageInfo.getPages());
+            map.put("totalNum", pageInfo.getTotal());
+            map.put("code", "SUCCESS");
+            map.put("list", gson.toJson(goods));
+        } else {
+            map.put("code", "ERROR");
+        }
+        return new Gson().toJson(map);
+    }
 }
+
