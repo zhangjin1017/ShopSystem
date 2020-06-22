@@ -201,6 +201,7 @@ public class GoodsController {
         } else {
             map.put("code", "ERROR");
         }
+        System.out.println();
         return new Gson().toJson(map);
     }
 }
