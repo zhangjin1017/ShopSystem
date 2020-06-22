@@ -96,7 +96,7 @@ public class GoodsController {
 
 
     @ResponseBody
-    @RequestMapping("/addGoods")
+    @RequestMapping(value = "/addGoods", produces = "text/plain;charset=UTF-8")
     public String addGoods(@RequestParam("businessId")int businessId,
                            @RequestParam("name")String name,
                            @RequestParam("price")double price,
@@ -138,6 +138,34 @@ public class GoodsController {
         }else{
             map.put("code","您还没有发布商品");
         }
+        return new Gson().toJson(map);
+    }
+    @RequestMapping(value = "/changeGoods", produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String changeGoods(@RequestParam("goodsId") int goodsId,
+                              @RequestParam("name") String name,
+                              @RequestParam("price") double price,
+                              @RequestParam("stock") int stock,
+                              @RequestParam("info") String info,
+                              @RequestParam("imgUrl") String imgUrl) {
+        Map<String, String> map = new HashMap<>();
+        Goods goods = new Goods(goodsId, null, name, price, 1, imgUrl, stock, info);
+
+        int line = goodsService.updateByPrimaryKeySelective(goods);
+
+        Goods goods1 = goodsService.selectByPrimaryKey(goodsId);
+        if (goods1.getStock() < stock) {
+            line += stockService.insertSelective(new Stock(null, goodsId, Stock.IN, new Date(), stock - goods1.getStock()));
+        } else if (goods1.getStock() > stock) {
+            line += stockService.insertSelective(new Stock(null, goodsId, Stock.IN, new Date(), goods1.getStock() - stock));
+        }
+
+        if(line == 0){
+            map.put("code","ERROR");
+        }else{
+            map.put("code","SUCCESS");
+        }
+
         return new Gson().toJson(map);
     }
 
