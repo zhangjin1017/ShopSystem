@@ -3,7 +3,10 @@ package com.my.controller;
 import com.google.gson.Gson;
 import com.my.pojo.Business;
 import com.my.pojo.BusinessExample;
+import com.my.pojo.Goods;
+import com.my.pojo.GoodsExample;
 import com.my.service.BusinessService;
+import com.my.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,12 @@ import java.util.Map;
 public class BusinessController {
 
     BusinessService businessService;
+
+    GoodsService goodsService;
+    @Autowired
+    public void setGoodsService(GoodsService goodsService) {
+        this.goodsService = goodsService;
+    }
 
     @Autowired
     public void setBusinessService(BusinessService businessService) {
@@ -78,4 +87,22 @@ public class BusinessController {
         }
         return new Gson().toJson(map);
     }
+    @RequestMapping("/getAllGoods")
+    @ResponseBody
+    public String businessRegister(@RequestParam("businessId") int businessId) {
+        Map<String, String> map = new HashMap<>();
+        GoodsExample goodsExample=new GoodsExample();
+        GoodsExample.Criteria criteria=goodsExample.createCriteria();
+        criteria.andBusinessIdEqualTo(businessId);
+        List<Goods> goodsList=goodsService.selectByExample(goodsExample);
+        System.out.println("goodsList"+goodsList);
+        if(goodsList != null){
+            map.put("code","SUCCESS");
+            map.put("goodsList",gson.toJson(goodsList));
+        }else{
+            map.put("code","您还没有发布商品");
+        }
+        return new Gson().toJson(map);
+    }
+
 }
