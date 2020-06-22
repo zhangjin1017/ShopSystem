@@ -112,6 +112,7 @@ public class OrderController {
             map.put("goodsList", gson.toJson(goods));
             map.put("ordersList", gson.toJson(orders));
             map.put("code", "SUCCESS");
+            System.out.println();
         } else {
             map.put("code", "ERROR");
         }
