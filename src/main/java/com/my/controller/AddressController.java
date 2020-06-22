@@ -53,7 +53,9 @@ public class AddressController {
         if (addressList.size() == 0) {
             map.put("code", "EMPTY");
         } else {
+            System.out.println(gson.toJson(addressList));
             map.put("addressList", gson.toJson(addressList));
+
             map.put("code", "SUCCESS");
             map.put("name", name);
 

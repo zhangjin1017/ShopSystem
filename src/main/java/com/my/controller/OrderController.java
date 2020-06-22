@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -100,11 +101,14 @@ public class OrderController {
         OrdersExample ordersExample = new OrdersExample();
         ordersExample.createCriteria().andUserIdEqualTo(userId);
         List<Orders> orders = ordersService.selectByExample(ordersExample);
+        List<String> dateList = new ArrayList<>();
         List<Goods> goods = new ArrayList<>();
         for (Orders order : orders) {
+            dateList.add(new SimpleDateFormat("yyyy-MM-dd").format(order.getDate()));
             goods.add(goodsService.selectByPrimaryKey(order.getGoodsId()));
         }
         if (orders.size() > 0) {
+            map.put("dateList", gson.toJson(dateList));
             map.put("goodsList", gson.toJson(goods));
             map.put("ordersList", gson.toJson(orders));
             map.put("code", "SUCCESS");
@@ -118,7 +122,7 @@ public class OrderController {
     @RequestMapping(value = "/confirm", produces = "text/plain;charset=UTF-8")
     public String confirm(@RequestParam("orderId") int id) {
         Orders orders = ordersService.selectByPrimaryKey(id);
-        orders.setType(Orders.Delivered);
+        orders.setType(Orders.Receipt);
         int line = ordersService.updateByPrimaryKey(orders);
 
         Map<String, String> map = new HashMap<>();
