@@ -123,4 +123,23 @@ public class GoodsController {
         return gson.toJson(map);
     }
 
+    @RequestMapping(value = "/getAllGoods", produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String getAllGoods(@RequestParam("businessId") int businessId) {
+        Map<String, String> map = new HashMap<>();
+        GoodsExample goodsExample=new GoodsExample();
+        GoodsExample.Criteria criteria=goodsExample.createCriteria();
+        criteria.andBusinessIdEqualTo(businessId);
+        List<Goods> goodsList=goodsService.selectByExample(goodsExample);
+        System.out.println("goodsList"+goodsList);
+        if(goodsList != null){
+            map.put("code","SUCCESS");
+            map.put("goodsList",gson.toJson(goodsList));
+        }else{
+            map.put("code","您还没有发布商品");
+        }
+        return new Gson().toJson(map);
+    }
+
+
 }
