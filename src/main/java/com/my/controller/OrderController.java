@@ -160,9 +160,11 @@ public class OrderController {
         PageInfo<Orders> pageInfo = new PageInfo<Orders>(orders);
         List<Goods> goods = new ArrayList<>();
         List<String> dateList = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
         for (Orders order : orders) {
             dateList.add(new SimpleDateFormat("yyyy-MM-dd").format(order.getDate()));
             goods.add(goodsService.selectByPrimaryKey(order.getGoodsId()));
+            userList.add(userService.selectByPrimaryKey(order.getUserId()));
         }
         if (orders.size() > 0) {
 
@@ -170,6 +172,7 @@ public class OrderController {
             map.put("totalNum", pageInfo.getTotal());
             map.put("dateList", gson.toJson(dateList));
             map.put("goodsList", gson.toJson(goods));
+            map.put("userList", gson.toJson(userList));
             map.put("ordersList", gson.toJson(orders));
             map.put("code", "SUCCESS");
             System.out.println();
@@ -180,7 +183,7 @@ public class OrderController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/searchByName", produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/searchOrderByName", produces = "text/plain;charset=UTF-8")
     public String searchByName(@RequestParam("name") String name,
                                @RequestParam("perPageCount") int perPageCount,
                                @RequestParam("currentPage") int currentPage) {
@@ -196,9 +199,11 @@ public class OrderController {
         ordersExample.createCriteria().andUserIdEqualTo(user.getUserId());
         List<Orders> orders = ordersService.selectByExample(ordersExample);
         PageInfo<Orders> pageInfo = new PageInfo(orders);
+        List<User> userList = new ArrayList<>();
         List<Goods> goods = new ArrayList<>();
         List<String> dateList = new ArrayList<>();
         for (Orders order : orders) {
+            userList.add(userService.selectByPrimaryKey(order.getUserId()));
             dateList.add(new SimpleDateFormat("yyyy-MM-dd").format(order.getDate()));
             goods.add(goodsService.selectByPrimaryKey(order.getGoodsId()));
         }
@@ -207,6 +212,7 @@ public class OrderController {
             map.put("totalNum", pageInfo.getTotal());
             map.put("dateList", gson.toJson(dateList));
             map.put("goodsList", gson.toJson(goods));
+            map.put("userList", gson.toJson(userList));
             map.put("ordersList", gson.toJson(orders));
             map.put("code", "SUCCESS");
             System.out.println();
