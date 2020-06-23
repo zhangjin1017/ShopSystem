@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +45,10 @@ public class StockController {
         List<Stock> list = stockService.selectByExample(null);
         Gson gson = new Gson();
         List<Goods> goodsList = new ArrayList<>();
+        List<String> dateList = new ArrayList<>();
         for (Stock stock : list) {
             goodsList.add(goodsService.selectByPrimaryKey(stock.getGoodsId()));
+            dateList.add(new SimpleDateFormat("yyyy-MM-dd").format(stock.getDate()));
         }
         Map<String,Object> map = new HashMap<>();
         PageInfo pageInfo = new PageInfo<Stock>(list);
