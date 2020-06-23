@@ -1,5 +1,7 @@
 package com.my.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.my.pojo.Goods;
 import com.my.pojo.Stock;
@@ -36,17 +38,20 @@ public class StockController {
 
     @RequestMapping("/getAllStock")
     @ResponseBody
-    public String getAllStock(@RequestParam("businessId") String businessId,
-                              @RequestParam("perPageCount") String perPageCount,
-                              @RequestParam("currentPage") StockService currentPage) {
-
+    public String getAllStock(@RequestParam("perPageCount") int perPageCount,
+                              @RequestParam("currentPage") int currentPage) {
+        PageHelper.startPage(currentPage, perPageCount);
         List<Stock> list = stockService.selectByExample(null);
         Gson gson = new Gson();
         List<Goods> goodsList = new ArrayList<>();
         for (Stock stock : list) {
             goodsList.add(goodsService.selectByPrimaryKey(stock.getGoodsId()));
         }
-        Map<String,String> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+        PageInfo pageInfo = new PageInfo<Stock>(list);
+
+        map.put("pageCount", pageInfo.getPages());
+        map.put("totalNum", pageInfo.getTotal());
         map.put("stockList",gson.toJson(list));
         map.put("goodsList",gson.toJson(goodsList));
         map.put("code","SUCCESS");
