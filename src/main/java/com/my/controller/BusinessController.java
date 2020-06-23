@@ -23,6 +23,7 @@ public class BusinessController {
     BusinessService businessService;
 
     GoodsService goodsService;
+
     @Autowired
     public void setGoodsService(GoodsService goodsService) {
         this.goodsService = goodsService;
@@ -32,6 +33,7 @@ public class BusinessController {
     public void setBusinessService(BusinessService businessService) {
         this.businessService = businessService;
     }
+
     Gson gson = new Gson();
 
     @RequestMapping(value = "/businessRegister", produces = "text/plain;charset=UTF-8")
@@ -54,9 +56,9 @@ public class BusinessController {
             map.put("code", "用户名重复");
         } else if (shopNameSize > 0) {
             map.put("code", "店铺名称重复");
-        }else if(phoneSize > 0){
+        } else if (phoneSize > 0) {
             map.put("code", "手机号重复");
-        }else{
+        } else {
             Business business = new Business(null, username, password, shopName, imgUrl, phone);
             int line = businessService.insert(business);
             if (line > 0) {
@@ -74,16 +76,36 @@ public class BusinessController {
                                    @RequestParam("password") String password) {
         Map<String, String> map = new HashMap<>();
         BusinessExample businessExample = new BusinessExample();
-        BusinessExample.Criteria criteria =businessExample.createCriteria();
+        BusinessExample.Criteria criteria = businessExample.createCriteria();
         criteria.andUsernameEqualTo(username);
         criteria.andPasswordEqualTo(password);
         Business business = businessService.selectByExample(businessExample).get(0);
 
-        if(business != null){
-            map.put("code","SUCCESS");
-            map.put("business",gson.toJson(business));
-        }else{
-            map.put("code","用户名不存在或密码错误");
+        if (business != null) {
+            map.put("code", "SUCCESS");
+            map.put("business", gson.toJson(business));
+        } else {
+            map.put("code", "用户名不存在或密码错误");
+        }
+        return new Gson().toJson(map);
+    }
+
+    @RequestMapping("/changePassword")
+    @ResponseBody
+    public String changePassword(@RequestParam("businessId") int businessId,
+                                 @RequestParam("password") String password) {
+        Map<String, String> map = new HashMap<>();
+
+        Business business = new Business();
+        business.setBusinessId(businessId);
+        business.setPassword(password);
+
+        int line = businessService.updateByPrimaryKeySelective(business);
+
+        if (line > 0) {
+            map.put("code", "SUCCESS");
+        } else {
+            map.put("code", "ERROR");
         }
         return new Gson().toJson(map);
     }
