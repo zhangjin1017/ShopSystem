@@ -112,9 +112,7 @@ public class PersonController {
         user.setPassword(password);
         userExample.createCriteria().andUserIdEqualTo(id);
         userService.updateByExampleSelective(user, userExample);
-        userExample.createCriteria().andUserIdEqualTo(id);
-        userService.updateByExampleSelective(user, userExample);
-        map.put("code", "SUCCESS");
+//        map.put("code", "SUCCESS");
 
         map.put("user", gson.toJson(userService.selectByPrimaryKey(id)));
         map.put("code", "SUCCESS");
