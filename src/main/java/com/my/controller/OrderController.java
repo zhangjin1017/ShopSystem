@@ -217,5 +217,25 @@ public class OrderController {
         return gson.toJson(map);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/updateLogisticsId", produces = "text/plain;charset=UTF-8")
+    public String updateLogisticsId(@RequestParam("logisticsId") String logisticsId,
+                                    @RequestParam("orderId") int orderId) {
+        Map<String, Object> map = new HashMap<>();
+
+        Orders orders = new Orders();
+        orders.setOrderId(orderId);
+        orders.setLogistics(logisticsId);
+
+        int line = ordersService.updateByPrimaryKeySelective(orders);
+        if (line == 1) {
+            map.put("code", "SUCCESS");
+            System.out.println();
+        } else {
+            map.put("code", "ERROR");
+        }
+        return gson.toJson(map);
+    }
+
 
 }
