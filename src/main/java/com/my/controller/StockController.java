@@ -52,7 +52,7 @@ public class StockController {
         }
         Map<String,Object> map = new HashMap<>();
         PageInfo pageInfo = new PageInfo<Stock>(list);
-
+        map.put("dateList",gson.toJson(dateList));
         map.put("pageCount", pageInfo.getPages());
         map.put("totalNum", pageInfo.getTotal());
         map.put("stockList",gson.toJson(list));
