@@ -41,6 +41,7 @@ public class ImageController {
 
 
     public String saveImage(HttpServletRequest request, MultipartFile file, String path) throws IOException {
+
         if (!file.isEmpty()) {
             Map<String, String> map = new HashMap<>();
             System.out.println("文件非空");
