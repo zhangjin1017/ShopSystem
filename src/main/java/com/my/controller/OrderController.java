@@ -1,6 +1,8 @@
 package com.my.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.my.pojo.*;
 import com.my.service.*;
@@ -51,6 +53,13 @@ public class OrderController {
     }
 
     Gson gson = new Gson();
+
+    UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @ResponseBody
     @RequestMapping(value = "/pushOrders", produces = "text/plain;charset=UTF-8")
@@ -134,4 +143,79 @@ public class OrderController {
         }
         return gson.toJson(map);
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/getAllOrders", produces = "text/plain;charset=UTF-8")
+    public String getAllOrders(@RequestParam("businessId") int businessId,
+                               @RequestParam("perPageCount") int perPageCount,
+                               @RequestParam("currentPage") int currentPage) {
+        Map<String, Object> map = new HashMap<>();
+
+        OrdersExample ordersExample = new OrdersExample();
+
+        PageHelper.startPage(currentPage, perPageCount);
+        ordersExample.createCriteria().andBusinessIdEqualTo(businessId);
+        List<Orders> orders = ordersService.selectByExample(ordersExample);
+        PageInfo<Orders> pageInfo = new PageInfo<Orders>(orders);
+        List<Goods> goods = new ArrayList<>();
+        List<String> dateList = new ArrayList<>();
+        for (Orders order : orders) {
+            dateList.add(new SimpleDateFormat("yyyy-MM-dd").format(order.getDate()));
+            goods.add(goodsService.selectByPrimaryKey(order.getGoodsId()));
+        }
+        if (orders.size() > 0) {
+
+            map.put("pageCount", pageInfo.getPages());
+            map.put("totalNum", pageInfo.getTotal());
+            map.put("dateList", gson.toJson(dateList));
+            map.put("goodsList", gson.toJson(goods));
+            map.put("ordersList", gson.toJson(orders));
+            map.put("code", "SUCCESS");
+            System.out.println();
+        } else {
+            map.put("code", "ERROR");
+        }
+        return gson.toJson(map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/searchByName", produces = "text/plain;charset=UTF-8")
+    public String searchByName(@RequestParam("name") String name,
+                               @RequestParam("perPageCount") int perPageCount,
+                               @RequestParam("currentPage") int currentPage) {
+        Map<String, Object> map = new HashMap<>();
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUsernameEqualTo(name);
+
+        User user = userService.selectByExample(userExample).get(0);
+
+        OrdersExample ordersExample = new OrdersExample();
+
+        PageHelper.startPage(currentPage, perPageCount);
+        ordersExample.createCriteria().andUserIdEqualTo(user.getUserId());
+        List<Orders> orders = ordersService.selectByExample(ordersExample);
+        PageInfo<Orders> pageInfo = new PageInfo(orders);
+        List<Goods> goods = new ArrayList<>();
+        List<String> dateList = new ArrayList<>();
+        for (Orders order : orders) {
+            dateList.add(new SimpleDateFormat("yyyy-MM-dd").format(order.getDate()));
+            goods.add(goodsService.selectByPrimaryKey(order.getGoodsId()));
+        }
+        if (orders.size() > 0) {
+            map.put("pageCount", pageInfo.getPages());
+            map.put("totalNum", pageInfo.getTotal());
+            map.put("dateList", gson.toJson(dateList));
+            map.put("goodsList", gson.toJson(goods));
+            map.put("ordersList", gson.toJson(orders));
+            map.put("code", "SUCCESS");
+            System.out.println();
+        } else {
+            map.put("code", "ERROR");
+        }
+
+        return gson.toJson(map);
+    }
+
+
 }
