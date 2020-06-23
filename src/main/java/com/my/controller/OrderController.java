@@ -93,7 +93,7 @@ public class OrderController {
 
                 cartService.deleteByPrimaryKey(cartId);
 
-                Stock stock = new Stock(null, goodsId, 1, new Date(), cart.getNum());
+                Stock stock = new Stock(null, goodsId, 2, new Date(), cart.getNum());
                 stockService.insert(stock);
             } else {
                 return gson.toJson("ERROR");
@@ -129,7 +129,7 @@ public class OrderController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/confirm", produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/confirmOrders", produces = "text/plain;charset=UTF-8")
     public String confirm(@RequestParam("orderId") int id) {
         Orders orders = ordersService.selectByPrimaryKey(id);
         orders.setType(Orders.Receipt);
@@ -232,6 +232,7 @@ public class OrderController {
         Orders orders = new Orders();
         orders.setOrderId(orderId);
         orders.setLogistics(logisticsId);
+        orders.setType(Orders.Delivered);
 
         int line = ordersService.updateByPrimaryKeySelective(orders);
         if (line == 1) {
