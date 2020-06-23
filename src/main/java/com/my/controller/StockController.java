@@ -37,7 +37,7 @@ public class StockController {
         this.goodsService = goodsService;
     }
 
-    @RequestMapping("/getAllStock")
+    @RequestMapping(value = "/getAllStock", produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String getAllStock(@RequestParam("perPageCount") int perPageCount,
                               @RequestParam("currentPage") int currentPage) {
