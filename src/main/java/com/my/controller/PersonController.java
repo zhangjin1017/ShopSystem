@@ -69,12 +69,10 @@ public class PersonController {
     public String updateInfo(@RequestParam("userId") String userId,
                              @RequestParam("name") String name,
                              @RequestParam("sex") String sex,
-                             @RequestParam("birth") String birth,
-                             @RequestParam("phone") String phone) {
+                             @RequestParam("birth") String birth) {
         Map<String, String> map = new HashMap<>();
-
+        System.out.println("userId"+userId);
         int id = Integer.parseInt(userId);
-
         Person person = new Person();
         person.setName(name);
         person.setSex(sex);
@@ -87,11 +85,7 @@ public class PersonController {
         PersonExample personExample = new PersonExample();
         personExample.createCriteria().andUserIdEqualTo(id);
         personService.updateByExampleSelective(person, personExample);
-        User user = new User();
-//        user.setUserId(id);
-        user.setPhone(phone);
 
-        UserExample userExample = new UserExample();
         map.put("code", "SUCCESS");
         map.put("user", gson.toJson(userService.selectByPrimaryKey(id)));
         return gson.toJson(map);

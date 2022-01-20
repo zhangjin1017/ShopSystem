@@ -4,6 +4,7 @@ import com.my.dao.UserMapper;
 import com.my.pojo.User;
 import com.my.pojo.UserExample;
 import com.my.service.UserService;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 public class UserServiceImp implements UserService {
+
     private UserMapper userMapper;
 
     @Autowired

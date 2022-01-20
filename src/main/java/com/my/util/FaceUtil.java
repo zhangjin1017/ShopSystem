@@ -37,8 +37,8 @@ public class FaceUtil {
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("image", img);
-            map.put("group_id", "group_repeat");
-            map.put("user_id", "user1");
+            map.put("group_id", "shopsystem");
+            map.put("user_id", "users");
             map.put("user_info", username);
             map.put("liveness_control", "NONE");
             map.put("image_type", "BASE64");
